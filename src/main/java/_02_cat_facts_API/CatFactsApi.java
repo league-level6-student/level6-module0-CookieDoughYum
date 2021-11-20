@@ -51,7 +51,7 @@ public class CatFactsApi {
          */
 CatWrapper response=stringMono.block();
 System.out.println(response);
-return stringMono.block();
+return response;
 
 
         /*
@@ -73,7 +73,7 @@ return stringMono.block();
         //Use block() to collect the response into a java object using the class you just created
 
         //return the Object
- System.out.println(response);
+ //System.out.println(response);
         return response.getData().get(0);
 
 
@@ -83,7 +83,8 @@ return stringMono.block();
         //use the getCatFact method to retrieve a cat fact
 
         //return the first (and only) String in the Arraylist of data in the response
-        return null;
+    	String catFact=getCatFact();
+        return catFact;
     }
 
     public void setWebClient(WebClient webClient) {

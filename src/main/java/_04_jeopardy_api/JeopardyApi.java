@@ -45,6 +45,17 @@ public class JeopardyApi {
         //3
         //return the clue at the random index you just created
 
-        return null;
+    	 Mono <Clue[]> stringMono = webClient.get()
+                 .uri(uriBuilder -> uriBuilder
+                         .queryParam("q", "" + value)
+                         .build())
+                 .retrieve()
+                 .bodyToMono(Clue[].class);
+    	 
+    	 Clue[] response=stringMono.block();
+    	 Random r=new Random();
+    	 int g=r.nextInt(response.length);
+    	 System.out.println(g);
+         return response[g];
     }
 }
