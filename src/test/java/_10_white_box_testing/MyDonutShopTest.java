@@ -11,33 +11,56 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
+import java.util.Collections;
+import java.util.List;
 
 class MyDonutShopTest {
 
     MyDonutShop myDonutShop;
 
+    @Mock
+    Order order;
+    
+    @Mock
+    BakeryService bakeryService;
+    
     @BeforeEach
     void setUp() {
-
+             MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void itShouldTakeDeliveryOrder() throws Exception {
         //given
+List<Order> orders=Collections.singletonList(order);
 
         //when
-
+          myDonutShop.takeOrder(order);
         //then
+          verify(myDonutShop, times(1)).equals(order.getNumberOfDonuts());
+          
     }
 
     @Test
     void givenInsufficientDonutsRemaining_whenTakeOrder_thenThrowIllegalArgumentException() {
         //given
+bakeryService.setDonutsRemaining(order.getNumberOfDonuts()-1);
 
         //when
 
         //then
+Throwable exceptionThrown = assertThrows(Exception.class, () -> myDonutShop.takeOrder(order));
+assertEquals(exceptionThrown.getMessage(), "There are currently not enough donuts to fulfil your order");
+try {
+	verify(myDonutShop, never()).takeOrder(any());
+} catch (Exception e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}
+
     }
 
     @Test

@@ -28,7 +28,6 @@ class DeliveryDriverTest {
     @Test
     void itShouldWasteTime() {
         //given
-CellPhone cellPhone = new CellPhone();
 boolean ExpectedBrowsing=true;
 
 when(cellPhone.browseCatMemes()).thenReturn(true);
@@ -49,18 +48,27 @@ assertEquals(ActualBrowsing, ExpectedBrowsing);
     	when(car.fillTank(octaneGrade)).thenReturn(true);
 
         //when
-    	double actualRefuel=car.getFuelLevel();
+    	boolean actualRefuel=car.fillTank(octaneGrade);
 
         //then
+    	assertEquals(actualRefuel, expectedRefuel);
+    	
     }
 
     @Test
     void itShouldContactCustomer() {
         //given
+String phoneNumber="111 111 1111";
+boolean expectedContact=true;
+
+when(cellPhone.call(phoneNumber)).thenReturn(true);
 
         //when
+boolean actualContact=cellPhone.call(phoneNumber);
 
         //then
+assertEquals(actualContact, expectedContact);
+
     }
 
 }

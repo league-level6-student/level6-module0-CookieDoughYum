@@ -37,6 +37,7 @@ public class MyDonutShop {
         this.paymentService = paymentService;
         this.deliveryService = deliveryService;
         this.bakeryService = bakeryService;
+        
     }
 
     public void openForTheDay() {
@@ -50,6 +51,7 @@ public class MyDonutShop {
     }
 
     public void takeOrder(Order order) throws Exception {
+    	
         if (openForBusiness) {
             int donutsInOrder = order.getNumberOfDonuts();
             if (donutsInOrder <= bakeryService.getDonutsRemaining()) {
