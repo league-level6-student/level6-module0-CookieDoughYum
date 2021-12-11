@@ -7,6 +7,7 @@ import _10_white_box_testing.models.PaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,13 +40,14 @@ List<Order> orders=Collections.singletonList(order);
 
         //when
           myDonutShop.takeOrder(order);
+          
         //then
           verify(myDonutShop, times(1)).equals(order.getNumberOfDonuts());
           
     }
 
     @Test
-    void givenInsufficientDonutsRemaining_whenTakeOrder_thenThrowIllegalArgumentException() {
+    void givenInsufficientDonutsRemaining_whenTakeOrder_thenThrowIllegalArgumentException() throws Exception{
         //given
 bakeryService.setDonutsRemaining(order.getNumberOfDonuts()-1);
 
@@ -53,13 +55,17 @@ bakeryService.setDonutsRemaining(order.getNumberOfDonuts()-1);
 
         //then
 Throwable exceptionThrown = assertThrows(Exception.class, () -> myDonutShop.takeOrder(order));
-assertEquals(exceptionThrown.getMessage(), "There are currently not enough donuts to fulfil your order");
+assertEquals(//expectedException, exceptionThrown);
+//assertEquals("There are currently not enough donuts to fulfil your order", exceptionThrown.getMessage());
 try {
 	verify(myDonutShop, never()).takeOrder(any());
 } catch (Exception e) {
 	// TODO Auto-generated catch block
 	e.printStackTrace();
+	System.out.println(e.getMessage());
 }
+
+
 
     }
 

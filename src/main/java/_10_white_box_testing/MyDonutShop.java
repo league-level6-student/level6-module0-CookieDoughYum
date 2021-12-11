@@ -31,6 +31,8 @@ public class MyDonutShop {
 
     private BakeryService bakeryService;
 
+   public Exception a=new IllegalArgumentException("Insufficient donuts remaining");
+    
     public MyDonutShop(PaymentService paymentService,
                        DeliveryService deliveryService,
                        BakeryService bakeryService) {
@@ -57,7 +59,7 @@ public class MyDonutShop {
             if (donutsInOrder <= bakeryService.getDonutsRemaining()) {
                 addOrder(order);
             } else {
-                throw new IllegalArgumentException("Insufficient donuts remaining");
+               throw a; 
             }
         }
         else{
