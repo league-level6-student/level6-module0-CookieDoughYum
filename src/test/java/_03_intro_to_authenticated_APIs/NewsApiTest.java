@@ -27,15 +27,22 @@ class NewsApiTest {
 
     NewsApi newsApi;
 
+    @Mock
+    WebClient webClientMock;
+    
+    @Mock
+    ApiExampleWrapper apiExampleWrapper;
+    
     @BeforeEach
     void setUp() {
-
+          MockitoAnnotations.openMocks(this);
+          newsApi.setWebClient(webClientMock);
     }
 
     @Test
     void itShouldGetNewsStoryByTopic() {
         //given
-
+        String topic="planes";
         //when
 
         //then

@@ -20,62 +20,68 @@ import java.util.List;
 
 class MyDonutShopTest {
 
-    MyDonutShop myDonutShop;
+	MyDonutShop myDonutShop;
 
-    @Mock
-    Order order;
-    
-    @Mock
-    BakeryService bakeryService;
-    
-    @BeforeEach
-    void setUp() {
-             MockitoAnnotations.openMocks(this);
-    }
+	@Mock
+	Order order;
 
-    @Test
-    void itShouldTakeDeliveryOrder() throws Exception {
-        //given
-List<Order> orders=Collections.singletonList(order);
+	@Mock
+	BakeryService bakeryService;
 
-        //when
-          myDonutShop.takeOrder(order);
-          
-        //then
-          verify(myDonutShop, times(1)).equals(order.getNumberOfDonuts());
-          
-    }
+	@Mock
+	PaymentService paymentService;
 
-    @Test
-    void givenInsufficientDonutsRemaining_whenTakeOrder_thenThrowIllegalArgumentException() throws Exception{
-        //given
-bakeryService.setDonutsRemaining(order.getNumberOfDonuts()-1);
+	@Mock
+	DeliveryService deliveryService;
 
-        //when
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+		myDonutShop = new MyDonutShop(paymentService, deliveryService, bakeryService);
+		myDonutShop.setDeliveryService(deliveryService);
+		myDonutShop.setPaymentService(paymentService);
+	}
 
-        //then
-Throwable exceptionThrown = assertThrows(Exception.class, () -> myDonutShop.takeOrder(order));
-assertEquals(//expectedException, exceptionThrown);
-//assertEquals("There are currently not enough donuts to fulfil your order", exceptionThrown.getMessage());
-try {
-	verify(myDonutShop, never()).takeOrder(any());
-} catch (Exception e) {
-	// TODO Auto-generated catch block
-	e.printStackTrace();
-	System.out.println(e.getMessage());
-}
+	@Test
+	void itShouldTakeDeliveryOrder() throws Exception {
+		// given
+		List<Order> orders = Collections.singletonList(order);
+		Order order2 = new Order("Joe", "1111111111", 5, 1.29, "1011346576", true);
+		when(paymentService.charge(order2)).thenReturn(true);
+		when(bakeryService.getDonutsRemaining()).thenReturn(100);
 
+		// when
+		myDonutShop.openForTheDay();
+		myDonutShop.takeOrder(order2);
+		// then
+		verify(deliveryService, times(1)).scheduleDelivery(order2);
+	}
 
+	@Test
+	void givenInsufficientDonutsRemaining_whenTakeOrder_thenThrowIllegalArgumentException() throws Exception {
+		// given
+		Order order1 = new Order("Joe", "1111111111", 5, 1.29, "1011346576", true);
+		// bakeryService.setDonutsRemaining(order.getNumberOfDonuts()-1);
+		when(paymentService.charge(order1)).thenReturn(true);
+		when(bakeryService.getDonutsRemaining()).thenReturn(0);
+		// when
+		myDonutShop.openForTheDay();
+		// then
+		Throwable exceptionThrown = assertThrows(IllegalArgumentException.class, () -> myDonutShop.takeOrder(order1));
+		assertEquals("Insufficient donuts remaining", exceptionThrown.getMessage());
+	}
 
-    }
-
-    @Test
-    void givenNotOpenForBusiness_whenTakeOrder_thenThrowIllegalStateException(){
-        //given
-
-        //when
-
-        //then
-    }
+	@Test
+	void givenNotOpenForBusiness_whenTakeOrder_thenThrowIllegalStateException() {
+		// given
+Order order3=new Order("Joe", "1111111111", 5, 1.29, "1011346576", true);
+when(paymentService.charge(order3)).thenReturn(true);
+when(bakeryService.getDonutsRemaining()).thenReturn(100);
+		// when
+myDonutShop.closeForTheDay();
+		// then
+Throwable exceptionThrown = assertThrows(IllegalStateException.class, () -> myDonutShop.takeOrder(order3));
+assertEquals("Sorry we're currently closed", exceptionThrown.getMessage());
+	}
 
 }

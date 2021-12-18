@@ -48,7 +48,6 @@ class CheetahSearchApiTest {
         cheetahSearchApi.setWebClient(webClientMock);
     }
 
-    @Test
     void itShouldGetBookByTopic() {
         //given
         String topic = "Cows";
@@ -75,6 +74,7 @@ class CheetahSearchApiTest {
         assertEquals(expectedResults, actualResults);
     }
 
+    
     @Test
     void itShouldFindBook() {
         //given
