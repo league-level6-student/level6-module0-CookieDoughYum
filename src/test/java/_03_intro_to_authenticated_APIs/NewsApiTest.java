@@ -68,7 +68,7 @@ class NewsApiTest {
         ApiExampleWrapper expectedExampleWrapper=new ApiExampleWrapper();
         expectedExampleWrapper.setArticles(expectedArticles);
         
-    when(webClientMock.get())
+when(webClientMock.get())
         .thenReturn(requestHeadersUriSpecMock);
 when(requestHeadersUriSpecMock.uri((Function<UriBuilder, URI>) any()))
         .thenReturn(requestHeadersSpecMock);
@@ -94,10 +94,37 @@ when(apiWrapperMonoMock.block())
         //given
 String topic="planes";
 String storyTitle="What's New on Paramount Plus in January 2022";
+String storyContent="I dont know why I thought monthly roundups of whats new on Paramount+ were a good idea, or even necessary. I mean, I guess I do: Sure, the first few months of offerings from the former CBS All Access…";
 String storyLink="https://lifehacker.com/whats-new-on-paramount-plus-in-january-2022-1848247730";
+String expectedArticle =
+storyTitle + " -\n"
+        + storyContent
+        + "\nFull article: " + storyLink;
+Article expectedArticle1=new Article();
+expectedArticle1.setTitle("What's New on Paramount Plus in January 2022");
+expectedArticle1.setContent("I dont know why I thought monthly roundups of whats new on Paramount+ were a good idea, or even necessary. I mean, I guess I do: Sure, the first few months of offerings from the former CBS All Access…");
+expectedArticle1.setUrl("https://lifehacker.com/whats-new-on-paramount-plus-in-january-2022-1848247730");
+List<Article> expectedArticles=Collections.singletonList(expectedArticle1);
+ApiExampleWrapper expectedExampleWrapper=new ApiExampleWrapper();
+expectedExampleWrapper.setArticles(expectedArticles);
+
+when(webClientMock.get())
+.thenReturn(requestHeadersUriSpecMock);
+when(requestHeadersUriSpecMock.uri((Function<UriBuilder, URI>) any()))
+.thenReturn(requestHeadersSpecMock);
+when(requestHeadersSpecMock.retrieve())
+.thenReturn(responseSpecMock);
+when(responseSpecMock.bodyToMono(ApiExampleWrapper.class))
+.thenReturn(apiWrapperMonoMock);
+when(apiWrapperMonoMock.block())
+.thenReturn(expectedExampleWrapper);
+
         //when
+String actualArticle = newsApi.findStory(topic);
 
         //then
+verify(webClientMock, times(1)).get();
+assertEquals(expectedArticle, actualArticle);
     }
 
 
